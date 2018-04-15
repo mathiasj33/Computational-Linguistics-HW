@@ -16,7 +16,7 @@ def instances_from_text_files(directory, label):
 
 
 def main(argv):
-    # python3 -m hw01_perceptron_solution.spam_classification -p data/enron/enron1/ham/ -n data/enron/enron1/spam/ -pp data/enron/enron2/ham/ -nn data/enron/enron2/spam/ -ppp data/enron/enron3/ham/ -nnn data/enron/enron3/spam/
+    # python3 -m hw01_perceptron.spam_classification -p data/enron/enron_utf8/enron1/ham/ -n data/enron/enron_utf8/enron1/spam/ -pp data/enron/enron_utf8/enron2/ham/ -nn data/enron/enron_utf8/enron2/spam/ -ppp data/enron/enron_utf8/enron3/ham/ -nnn data/enron/enron_utf8/enron3/spam/
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--positive_training_dir', required=True)
     parser.add_argument('-n', '--negative_training_dir', required=True)
