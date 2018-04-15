@@ -3,7 +3,10 @@ from nltk import word_tokenize
 
 
 def dot(dictA, dictB):
-    return 0  # TODO: Ex. 2: return vector product between features vectors represented by dictA and dictB.
+    sum = 0
+    for k in dictA:
+        sum += dictA[k] * dictB.get(k, 0)
+    return sum
 
 
 def normalized_tokens(text):
