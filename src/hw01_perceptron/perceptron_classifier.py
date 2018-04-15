@@ -40,11 +40,16 @@ class PerceptronClassifier:
         Return a boolean value indicating whether an update was performed.
         """
         predicted_output = self.prediction(instance.feature_counts)
-        error = 0  # TODO: Ex. 7: Replace 0 with the correct calculation of the error
+        if predicted_output == instance.label:
+            error = 0
+        elif predicted_output == True:
+            error = 1
+        else:
+            error = -1
         do_update = error != 0
         if do_update:
             for feature, count in instance.feature_counts.items():
-                pass  # TODO: Ex. 7: Replace pass with update of feature weights
+                self.weights[feature] -= error * count
         return do_update
 
     def training_iteration(self, dataset):
@@ -70,7 +75,7 @@ class PerceptronClassifier:
                 best_dev_accuracy = development_accuracy
                 best_weights = self.weights.copy()
             print("Iteration: %d \t Train Accuracy: %.4f \t Dev Accuracy: %.4f \t Best Dev Accuracy: %.4f" % (
-            i, train_accuracy, development_accuracy, best_dev_accuracy))
+                i, train_accuracy, development_accuracy, best_dev_accuracy))
         self.weights = best_weights
         return best_dev_accuracy
 
@@ -88,7 +93,23 @@ class PerceptronClassifier:
         """
         Caclculate f_measure of classifier for a labelled dataset and a specified label.
         """
-        return 0  # TODO: Do the prediction for a given data set, and return the f-measure for a label of interest.
+        p = self.precision(dataset, for_label)
+        r = self.recall(dataset, for_label)
+        return 2 * p * r / (p + r)
+
+    def precision(self, dataset, for_label):
+        correct = sum(
+            [1 if self.prediction(inst.feature_counts) == inst.label else 0 for inst in dataset.instance_list])
+        classified = sum(
+            [1 if self.prediction(inst.feature_counts) == for_label else 0 for inst in dataset.instance_list])
+        return correct / classified
+
+    def recall(self, dataset, for_label):
+        correct = sum(
+            [1 if self.prediction(inst.feature_counts) == inst.label else 0 for inst in dataset.instance_list])
+        total = sum(
+            [1 if inst.label == for_label else 0 for inst in dataset.instance_list])
+        return correct / total
 
     def copy(self):
         """
