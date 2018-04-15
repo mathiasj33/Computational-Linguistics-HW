@@ -3,6 +3,7 @@ import json
 
 from hw01_perceptron.utils import dot
 
+
 class PerceptronClassifier:
     def __init__(self, weights):
         # string to int
@@ -23,7 +24,7 @@ class PerceptronClassifier:
         Initialize PerceptronClassifier for dataset. A classifier that
         is constructed with this method still needs to be trained..
         """
-        weights = {w:0 for w in dataset.feature_set}
+        weights = {w: 0 for w in dataset.feature_set}
         return cls(weights)
 
     def prediction(self, counts):
@@ -39,8 +40,8 @@ class PerceptronClassifier:
         Return a boolean value indicating whether an update was performed.
         """
         predicted_output = self.prediction(instance.feature_counts)
-        error = 0 # TODO: Ex. 7: Replace 0 with the correct calculation of the error
-        do_update = error !=0
+        error = 0  # TODO: Ex. 7: Replace 0 with the correct calculation of the error
+        do_update = error != 0
         if do_update:
             for feature, count in instance.feature_counts.items():
                 pass  # TODO: Ex. 7: Replace pass with update of feature weights
@@ -68,7 +69,8 @@ class PerceptronClassifier:
             if development_accuracy > best_dev_accuracy:
                 best_dev_accuracy = development_accuracy
                 best_weights = self.weights.copy()
-            print("Iteration: %d \t Train Accuracy: %.4f \t Dev Accuracy: %.4f \t Best Dev Accuracy: %.4f" % (i, train_accuracy, development_accuracy, best_dev_accuracy))
+            print("Iteration: %d \t Train Accuracy: %.4f \t Dev Accuracy: %.4f \t Best Dev Accuracy: %.4f" % (
+            i, train_accuracy, development_accuracy, best_dev_accuracy))
         self.weights = best_weights
         return best_dev_accuracy
 
@@ -82,12 +84,11 @@ class PerceptronClassifier:
                 num_errors += 1
         return 1 - num_errors / len(dataset.instance_list)
 
-
     def prediction_f_measure(self, dataset, for_label):
         """
         Caclculate f_measure of classifier for a labelled dataset and a specified label.
         """
-        return 0 # TODO: Do the prediction for a given data set, and return the f-measure for a label of interest.
+        return 0  # TODO: Do the prediction for a given data set, and return the f-measure for a label of interest.
 
     def copy(self):
         """

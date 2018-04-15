@@ -53,7 +53,6 @@ do_update_inst = [DataInstance.from_list_of_feature_occurrences(sample[0], sampl
 
 class PerceptronClassifierTest(TestCase):
 
-   
     def setUp(self):
         self.small_dataset_train_1 = Dataset(train_inst_1)
         self.small_dataset_train_2 = Dataset(train_inst_2)
@@ -61,41 +60,39 @@ class PerceptronClassifierTest(TestCase):
         self.small_dataset_pred_test_1 = Dataset(pred_inst_1)
         self.small_dataset_pred_test_2 = Dataset(pred_inst_2)
         self.small_instance_list_no_update = no_update_inst
-        self.small_instance_list_do_update = do_update_inst     
+        self.small_instance_list_do_update = do_update_inst
 
-   
-        
     def test01_dot_product_01(self):
         """Checks if dot product is correctly calculated"""
-        dictA = {'Car' : 42, 'Apple' : 1, 'Banana' : 25}
-        dictB = {'Apple' : 10, 'House' : 52, 'Car' : 24}
+        dictA = {'Car': 42, 'Apple': 1, 'Banana': 25}
+        dictB = {'Apple': 10, 'House': 52, 'Car': 24}
         expected_value = 1018
-        self.assertEqual(dot(dictA,dictB),expected_value)
-        
+        self.assertEqual(dot(dictA, dictB), expected_value)
+
     def test02_creating_data_instance_01(self):
         """Checking if Data instance created correctly"""
-        feature_list= ['the','cat','sat', 'on', 'the', 'mat']
+        feature_list = ['the', 'cat', 'sat', 'on', 'the', 'mat']
         label = 'spam'
-        instance = DataInstance.from_list_of_feature_occurrences(feature_list,label)
-        self.assertEqual(instance.label,label)
-        self.assertEqual(instance.feature_counts,{'the':2,'cat':1,'sat':1,'on':1,'mat':1})
-        
+        instance = DataInstance.from_list_of_feature_occurrences(feature_list, label)
+        self.assertEqual(instance.label, label)
+        self.assertEqual(instance.feature_counts, {'the': 2, 'cat': 1, 'sat': 1, 'on': 1, 'mat': 1})
+
     def test03_most_frequent_features_01(self):
         ''' Checking if most n frequent words are retrieved correctly '''
-        self.assertEqual(self.small_dataset_train_2.get_topn_features(2),{'deal','lottery'})
-        self.assertEqual(self.small_dataset_dev.get_topn_features(1),{'deal'})
-    
+        self.assertEqual(self.small_dataset_train_2.get_topn_features(2), {'deal', 'lottery'})
+        self.assertEqual(self.small_dataset_dev.get_topn_features(1), {'deal'})
+
     def test04_filtering_features_01(self):
         '''Checking if feature counts only contains features from the filter'''
-        filter = {'lottery','eggs','Banana'}
+        filter = {'lottery', 'eggs', 'Banana'}
         self.small_dataset_train_2.set_feature_set(filter)
-        self.assertEqual(self.small_dataset_train_2.instance_list[0].feature_counts.keys(),{'lottery'})
-        self.assertEqual(self.small_dataset_train_2.instance_list[3].feature_counts.keys(),{'eggs'})
-        
+        self.assertEqual(self.small_dataset_train_2.instance_list[0].feature_counts.keys(), {'lottery'})
+        self.assertEqual(self.small_dataset_train_2.instance_list[3].feature_counts.keys(), {'eggs'})
+
     def test05_most_frequent_baseline_01(self):
         '''Checking if the base line accuracy is calculated correctly'''
-        self.assertEqual(self.small_dataset_pred_test_1.most_frequent_sense_accuracy(),0.6)
-        
+        self.assertEqual(self.small_dataset_pred_test_1.most_frequent_sense_accuracy(), 0.6)
+
     def test_06_update_01(self):
         """Verify that the perceptron update is performed correctly."""
         classifier = PerceptronClassifier({'deal': 1, 'lottery': -1})
@@ -112,9 +109,4 @@ class PerceptronClassifierTest(TestCase):
     def test_08_f1_measure_01(self):
         """Checking if the F1 measure is calculated correctly"""
         pc = PerceptronClassifier.for_dataset(self.small_dataset_train_1)
-        self.assertAlmostEqual(pc.prediction_f_measure(self.small_dataset_train_1,False) , 0.666666666)
-
-    
-
-        
-        
+        self.assertAlmostEqual(pc.prediction_f_measure(self.small_dataset_train_1, False), 0.666666666)

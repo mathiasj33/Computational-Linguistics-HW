@@ -5,6 +5,7 @@ import os
 from hw01_perceptron.utils import DataInstance, Dataset
 from hw01_perceptron.perceptron_classifier import PerceptronClassifier
 
+
 def instances_from_text_files(directory, label):
     """ This returns a generator over data instances in a given directory. """
     instance_list = []
@@ -13,15 +14,16 @@ def instances_from_text_files(directory, label):
             instance_list.append(DataInstance.from_text_file(directory + "/" + filename, label))
     return instance_list
 
+
 def main(argv):
     # python3 -m hw01_perceptron_solution.spam_classification -p data/enron/enron1/ham/ -n data/enron/enron1/spam/ -pp data/enron/enron2/ham/ -nn data/enron/enron2/spam/ -ppp data/enron/enron3/ham/ -nnn data/enron/enron3/spam/
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--positive_training_dir', required = True)
-    parser.add_argument('-n', '--negative_training_dir', required = True)
-    parser.add_argument('-pp', '--positive_dev_dir', required = True)
-    parser.add_argument('-nn', '--negative_dev_dir', required = True)
-    parser.add_argument('-ppp', '--positive_test_dir', required = True)
-    parser.add_argument('-nnn', '--negative_test_dir', required = True)
+    parser.add_argument('-p', '--positive_training_dir', required=True)
+    parser.add_argument('-n', '--negative_training_dir', required=True)
+    parser.add_argument('-pp', '--positive_dev_dir', required=True)
+    parser.add_argument('-nn', '--negative_dev_dir', required=True)
+    parser.add_argument('-ppp', '--positive_test_dir', required=True)
+    parser.add_argument('-nnn', '--negative_test_dir', required=True)
     opts = parser.parse_args()
 
     positive_training_instances = instances_from_text_files(opts.positive_training_dir, True)
@@ -53,6 +55,7 @@ def main(argv):
     print(perceptron_classifier.features_for_class(True))
     print("Top features for negative class:")
     print(perceptron_classifier.features_for_class(False))
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
