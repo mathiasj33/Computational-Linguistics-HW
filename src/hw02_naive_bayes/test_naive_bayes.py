@@ -50,9 +50,9 @@ class NaiveBayesTest(TestCase):
                                                     ('top', 'spam'): 1, ('best', 'spam'): 1, ('meeting', 'relevant'): 3, ('hot', 'spam'): 4, ('free', 'promotions'): 3})
         self.assertEqual(self.nbc.cat_to_num_words, {'spam': 12, 'promotions': 6, 'relevant': 12})
         self.assertEqual(self.nbc.vocabsize, 12)
-        self.assertAlmostEqual(self.nbc.category_to_prior['spam'],0.42857142857)
-        self.assertAlmostEqual(self.nbc.category_to_prior['relevant'] , 0.428571428)
-        self.assertAlmostEqual(self.nbc.category_to_prior['promotions'] , 0.14285714)
+        self.assertAlmostEqual(self.nbc.category_to_prior['spam'], 0.33333333)
+        self.assertAlmostEqual(self.nbc.category_to_prior['relevant'], 0.5)
+        self.assertAlmostEqual(self.nbc.category_to_prior['promotions'], 0.16666667)
         self.assertEqual(self.nbc.smoothing, 1.0)
         
     def test03_prediction_01(self):
@@ -65,9 +65,9 @@ class NaiveBayesTest(TestCase):
         
     def test05_log_odds_for_word_01(self):
         """Checking if log-odds value of each word is computed correctly"""
-        self.assertAlmostEqual(self.nbc.log_odds_for_word('hot', 'spam'), 1.32175583)
-        self.assertAlmostEqual(self.nbc.log_odds_for_word('single', 'relevant'), -1.46633706)
+        self.assertAlmostEqual(self.nbc.log_odds_for_word('hot', 'spam'), 0.91629073)
+        self.assertAlmostEqual(self.nbc.log_odds_for_word('single', 'relevant'), -1.09861228)
 		
     def test06_features_for_category_01(self):
         """Checking if the words with the highest log-odds are retrieved correctly"""
-        self.assertEqual(self.nbc2.features_for_category("relevant"),['work','tomorrow', 'meeting', 'lecture', 'morning', 'professor'])
+        self.assertEqual(self.nbc2.features_for_category("relevant"),['work','tomorrow', 'meeting', 'morning', 'lecture', 'professor'])
