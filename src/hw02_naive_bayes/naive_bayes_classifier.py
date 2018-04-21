@@ -74,7 +74,7 @@ class NaiveBayesClassifier:
             = log[P(w1|category)] +  log[P(w1|category)] + ... + log[P(wn|category)]
         """
         wordcount = self.word_and_cat_to_count.get((word, category), 0)
-        total = self.cat_to_num_words.get(word, 0)
+        total = self.cat_to_num_words.get(category, 0)
         # Parametrize by overall count added rather than per type.
         return math.log(wordcount + self.smoothing) - math.log(total + self.smoothing * self.vocabsize)
 
