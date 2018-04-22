@@ -3,8 +3,10 @@ from nltk import word_tokenize
 import sys
 import math
 
+
 def normalized_tokens(text):
     return [token.lower() for token in word_tokenize(text)]
+
 
 class DataInstance:
     def __init__(self, feature_counts, label):
@@ -15,10 +17,9 @@ class DataInstance:
     @classmethod
     def from_list_of_feature_occurrences(cls, feature_list, label):
         """ Creates feature counts for all features in the list."""
-        feature_counts = dict()
-        # TODO: Exercise 1: Create a dictionary that contains for each feature in the list the count how often it occurs.
-        # (Use your solution from the previous exercise sheet)
-        # ODOT
+        feature_counts = defaultdict(int)
+        for f in feature_list:
+            feature_counts[f] = feature_counts[f] + 1
         return cls(feature_counts, label)
 
     @classmethod
@@ -26,6 +27,7 @@ class DataInstance:
         with open(filename, 'r') as myfile:
             token_list = normalized_tokens(myfile.read().strip())
         return cls.from_list_of_feature_occurrences(token_list, label)
+
 
 class Dataset:
     def __init__(self, instance_list):
@@ -48,16 +50,17 @@ class NaiveBayesClassifier:
             self.cat_to_num_words[cat] += count
         self.vocabsize = vocabsize
         total_instances = sum(category_to_num_instances.values())
-        self.category_to_prior = {c: n/total_instances for c, n in category_to_num_instances.items()}
+        self.category_to_prior = {c: n / total_instances for c, n in category_to_num_instances.items()}
         self.smoothing = smoothing
 
     @classmethod
-    def for_dataset(cls, dataset, smoothing = 1.0):
+    def for_dataset(cls, dataset, smoothing=1.0):
         """ Creates a NB-Classifier for a dataset."""
         # (str,str) -> int
-        word_and_category_to_count = defaultdict(int) # maps tuples (word, category) to the number of occurences (of a word in a that category)
+        word_and_category_to_count = defaultdict(
+            int)  # maps tuples (word, category) to the number of occurences (of a word in a that category)
         # str -> int
-        category_to_num_instances = defaultdict(int) # maps a category name to the number of instances in that category
+        category_to_num_instances = defaultdict(int)  # maps a category name to the number of instances in that category
         vocabsize = len(dataset.feature_set)
         for inst in dataset.instance_list:
             # TODO: Exercise 2.
