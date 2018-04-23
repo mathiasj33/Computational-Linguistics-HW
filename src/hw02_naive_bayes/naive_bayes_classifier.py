@@ -57,8 +57,8 @@ class NaiveBayesClassifier:
     def for_dataset(cls, dataset, smoothing=1.0):
         """ Creates a NB-Classifier for a dataset."""
         # (str,str) -> int
-        word_and_category_to_count = defaultdict(
-            int)  # maps tuples (word, category) to the number of occurences (of a word in a that category)
+        word_and_category_to_count = defaultdict(int)
+        # maps tuples (word, category) to the number of occurences (of a word in a that category)
         # str -> int
         category_to_num_instances = defaultdict(int)  # maps a category name to the number of instances in that category
         vocabsize = len(dataset.feature_set)
@@ -66,7 +66,7 @@ class NaiveBayesClassifier:
             for word in dataset.feature_set:
                 if not inst.feature_counts[word] == 0:
                     word_and_category_to_count[(word, inst.label)] += inst.feature_counts[word]
-                category_to_num_instances[inst.label] += inst.feature_counts[word] + smoothing
+                category_to_num_instances[inst.label] += 1
         return cls(word_and_category_to_count, category_to_num_instances, vocabsize, smoothing)
 
     def log_probability(self, word, category):
@@ -125,7 +125,8 @@ class NaiveBayesClassifier:
             if not cat == category:
                 wordcount = self.word_and_cat_to_count.get((word, cat), 0)
                 total = self.cat_to_num_words.get(cat, 0)
-                all += ((wordcount + self.smoothing) / (total + self.smoothing * self.vocabsize)) * self.category_to_prior[cat]
+                all += ((wordcount + self.smoothing) / (total + self.smoothing * self.vocabsize)) * \
+                       self.category_to_prior[cat]
         pcat = self.log_probability(word, category) + math.log(self.category_to_prior[category]) - math.log(all)
         return pcat
 
