@@ -63,9 +63,10 @@ class NaiveBayesClassifier:
         category_to_num_instances = defaultdict(int)  # maps a category name to the number of instances in that category
         vocabsize = len(dataset.feature_set)
         for inst in dataset.instance_list:
-            # TODO: Exercise 2.
-            pass
-            # ODOT
+            for word in dataset.feature_set:
+                if not inst.feature_counts[word] == 0:
+                    word_and_category_to_count[(word, inst.label)] += inst.feature_counts[word]
+                category_to_num_instances[inst.label] += inst.feature_counts[word] + smoothing
         return cls(word_and_category_to_count, category_to_num_instances, vocabsize, smoothing)
 
     def log_probability(self, word, category):
@@ -97,15 +98,21 @@ class NaiveBayesClassifier:
         """ Predicts a category according of the log-odds of the feature counts of this label.
         feature_counts is a dict (str -> int)."""
         best_category = None
-        # TODO: Exercise 3.
-        # ODOT
-        return best_category
+        scores = dict()
+        for cat in self.cat_to_num_words.keys():
+            scores[cat] = self.score_for_category(feature_counts, cat)
+        best_category = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        return best_category[0][0]
 
     def prediction_accuracy(self, dataset):
         """ Returns the accuracy of this classifier on a test set."""
-        # TODO: Exercise 4.
-        # ODOT
-        return 0
+        right = 0
+        scores = dict()
+        for inst in dataset.instance_list:
+            if self.prediction(inst.feature_counts) == inst.label:
+                right += 1
+        acc = dict()
+        return right / len(dataset.instance_list)
 
     def log_odds_for_word(self, word, category):
         """ This computes the log-odds for one word only.
@@ -113,9 +120,14 @@ class NaiveBayesClassifier:
             = log[P(word|category)*P(category)] - log[P(word|other_category1)*P(other_category1)
               + P(word|other_category2)*P(other_category2) + ...]
         """
-        # TODO: Exercise 5.
-        # ODOT
-        return 0
+        all = 0
+        for cat in self.cat_to_num_words:
+            if not cat == category:
+                wordcount = self.word_and_cat_to_count.get((word, cat), 0)
+                total = self.cat_to_num_words.get(cat, 0)
+                all += ((wordcount + self.smoothing) / (total + self.smoothing * self.vocabsize)) * self.category_to_prior[cat]
+        pcat = self.log_probability(word, category) + math.log(self.category_to_prior[category]) - math.log(all)
+        return pcat
 
     def features_for_category(self, category, topn=10):
         """ Returns the topn features, that have the highest log-odds ratio for a category."""
