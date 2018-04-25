@@ -19,7 +19,7 @@ class DataInstance:
         """ Creates feature counts for all features in the list."""
         feature_counts = defaultdict(int)
         for f in feature_list:
-            feature_counts[f] = feature_counts[f] + 1
+            feature_counts[f] += 1
         return cls(feature_counts, label)
 
     @classmethod
@@ -63,10 +63,9 @@ class NaiveBayesClassifier:
         category_to_num_instances = defaultdict(int)  # maps a category name to the number of instances in that category
         vocabsize = len(dataset.feature_set)
         for inst in dataset.instance_list:
-            for word in dataset.feature_set:
-                if not inst.feature_counts[word] == 0:
-                    word_and_category_to_count[(word, inst.label)] += inst.feature_counts[word]
-                category_to_num_instances[inst.label] += 1
+            for f in inst.feature_counts:
+                word_and_category_to_count[(f, inst.label)] += inst.feature_counts[f]
+            category_to_num_instances[inst.label] += 1
         return cls(word_and_category_to_count, category_to_num_instances, vocabsize, smoothing)
 
     def log_probability(self, word, category):
@@ -106,13 +105,9 @@ class NaiveBayesClassifier:
 
     def prediction_accuracy(self, dataset):
         """ Returns the accuracy of this classifier on a test set."""
-        right = 0
-        scores = dict()
-        for inst in dataset.instance_list:
-            if self.prediction(inst.feature_counts) == inst.label:
-                right += 1
-        acc = dict()
-        return right / len(dataset.instance_list)
+        num_correct = sum(
+            [1 if self.prediction(inst.feature_counts) == inst.label else 0 for inst in dataset.instance_list])
+        return num_correct / len(dataset.instance_list)
 
     def log_odds_for_word(self, word, category):
         """ This computes the log-odds for one word only.
