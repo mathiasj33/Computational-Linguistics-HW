@@ -9,6 +9,9 @@ def square_roots(start,end,length):
     >>> square_roots(4,9,3)
     array([ 2.        ,  2.54950976,  3.        ])
     """
+    myarray= np.linspace(start, end, num=length, endpoint=True, retstep=False)
+    return np.sqrt(myarray)
+
     pass  # TODO: Exercise 2.1
 
 
@@ -22,4 +25,6 @@ def odd_ones_squared(rows, cols):
            [ 25,   6,  49,   8,  81],
            [ 10, 121,  12, 169,  14]])
     """
+    list = [n if n % 2 == 0 else n*n for n in range(rows*cols)]
+    return np.array(list).reshape(3,5)
     pass  # TODO: Exercise 2.2

@@ -20,26 +20,36 @@ def character_ngrams(text, n):
 def token_ngrams(tokens, n):
     """ Returns a list of lists with n-grams."""
     # TODO Exercise 1.1
-    return []
+    myngrams= [tokens[i:i + n] for i in range(len(tokens) - n + 1)]
+    return [" ".join(i) for i in myngrams]
 
 def token_features(tokens1, tokens2):
     features = dict()
-    #  TODO Exercise 1.2
+    features[WORD_OVERLAP] = len(tokens1.intersection(tokens2))
+    features[WORD_UNION] = len(tokens1.union(tokens2))
     return features
 
 def word_ngram_features(ngrams1, ngrams2):
     features = dict()
-    # TODO Exercise 1.3
+    threegrams1 = set([n for n in ngrams1 if len(n.split()) == 3])
+    threegrams2 = set([n for n in ngrams2 if len(n.split()) == 3])
+    features[WORD_NGRAM_OVERLAP] = token_features(threegrams1, threegrams2)[WORD_OVERLAP]
+    features[WORD_NGRAM_UNION] = token_features(threegrams1, threegrams2)[WORD_UNION]
     return features
 
 def character_ngram_features(ngrams1, ngrams2):
     features = dict()
-    # TODO Exercise 1.4
+    threegrams1 = set([n for n in ngrams1 if len(n) == 3])
+    threegrams2 = set([n for n in ngrams2 if len(n) == 3])
+    features[CHARACTER_NGRAM_OVERLAP] = token_features(threegrams1, threegrams2)[WORD_OVERLAP]
+    features[CHARACTER_NGRAM_UNION] = token_features(threegrams1, threegrams2)[WORD_UNION]
     return features
 
 def wordpair_features(tokens1, tokens2):
     features = dict()
-    # TODO Exercise 1.5
+    for tok1 in tokens1:
+        for tok2 in tokens2:
+            features[tok1+"#"+tok2]=1
     return features
 
 def paraphrases_to_dataset(filename, f_token=True, f_w_ngram=True, f_c_ngram=True, f_wordpair=True):
