@@ -1,7 +1,8 @@
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 
-def square_roots(start,end,length):
+
+def square_roots(start, end, length):
     """
     Returns a 1d numpy array of the specified length, containing the square roots of equi-distant input values
     between start and end (both included).
@@ -9,7 +10,7 @@ def square_roots(start,end,length):
     >>> square_roots(4,9,3)
     array([ 2.        ,  2.54950976,  3.        ])
     """
-    pass  # TODO: Exercise 2.1
+    return np.sqrt(np.linspace(start, end, num=length))
 
 
 def odd_ones_squared(rows, cols):
@@ -22,4 +23,6 @@ def odd_ones_squared(rows, cols):
            [ 25,   6,  49,   8,  81],
            [ 10, 121,  12, 169,  14]])
     """
-    pass  # TODO: Exercise 2.2
+    arr = np.arange(rows*cols).reshape(rows, cols)
+    arr[arr % 2 != 0] *= arr[arr % 2 != 0]
+    return arr
