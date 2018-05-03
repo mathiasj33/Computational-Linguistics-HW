@@ -5,9 +5,9 @@ import numpy as np
 
 class test_paraphrases_scikit(TestCase):
     def setUp(self):
-        self.trainpath_small = "hw04_sklearn_paraphrases_solution/unittest-toydata/train.txt"
-        self.devpath_small = "hw04_sklearn_paraphrases_solution/unittest-toydata/dev.txt"
-        self.testpath_small = "hw04_sklearn_paraphrases_solution/unittest-toydata/test.txt"
+        self.trainpath_small = "hw04_sklearn_paraphrases/unittest-toydata/train.txt"
+        self.devpath_small = "hw04_sklearn_paraphrases/unittest-toydata/dev.txt"
+        self.testpath_small = "hw04_sklearn_paraphrases/unittest-toydata/test.txt"
         self.trainpath = "data/paraphrases/train.txt"
         self.devpath = "data/paraphrases/dev.txt"
         self.testpath = "data/paraphrases/test.txt"
