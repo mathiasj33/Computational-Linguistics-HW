@@ -13,44 +13,44 @@ WORD_NGRAM_UNION = "word_ngram_union"
 CHARACTER_NGRAM_OVERLAP = "character_ngram_overlap"
 CHARACTER_NGRAM_UNION = "character_ngram_union"
 
+
 def character_ngrams(text, n):
     """ Returns a list of lists with n-grams."""
-    return [text[i:i+n] for i in range(len(text)-n+1)]
+    return [text[i:i + n] for i in range(len(text) - n + 1)]
+
 
 def token_ngrams(tokens, n):
     """ Returns a list of lists with n-grams."""
-    # TODO Exercise 1.1
-    myngrams= [tokens[i:i + n] for i in range(len(tokens) - n + 1)]
-    return [" ".join(i) for i in myngrams]
+    return [' '.join(tokens[i:i+n]) for i in range(len(tokens) - n + 1)]
+
 
 def token_features(tokens1, tokens2):
     features = dict()
-    features[WORD_OVERLAP] = len(tokens1.intersection(tokens2))
-    features[WORD_UNION] = len(tokens1.union(tokens2))
+    features[WORD_OVERLAP] = len(tokens1 & tokens2)
+    features[WORD_UNION] = len(tokens1 | tokens2)
     return features
+
 
 def word_ngram_features(ngrams1, ngrams2):
     features = dict()
-    threegrams1 = set([n for n in ngrams1 if len(n.split()) == 3])
-    threegrams2 = set([n for n in ngrams2 if len(n.split()) == 3])
-    features[WORD_NGRAM_OVERLAP] = token_features(threegrams1, threegrams2)[WORD_OVERLAP]
-    features[WORD_NGRAM_UNION] = token_features(threegrams1, threegrams2)[WORD_UNION]
+    features[WORD_NGRAM_OVERLAP] = len(ngrams1 & ngrams2)
+    features[WORD_NGRAM_UNION] = len(ngrams1 | ngrams2)
     return features
+
 
 def character_ngram_features(ngrams1, ngrams2):
     features = dict()
-    threegrams1 = set([n for n in ngrams1 if len(n) == 3])
-    threegrams2 = set([n for n in ngrams2 if len(n) == 3])
-    features[CHARACTER_NGRAM_OVERLAP] = token_features(threegrams1, threegrams2)[WORD_OVERLAP]
-    features[CHARACTER_NGRAM_UNION] = token_features(threegrams1, threegrams2)[WORD_UNION]
+    features[CHARACTER_NGRAM_OVERLAP] = len(ngrams1 & ngrams2)
+    features[CHARACTER_NGRAM_UNION] = len(ngrams1 | ngrams2)
     return features
+
 
 def wordpair_features(tokens1, tokens2):
     features = dict()
-    for tok1 in tokens1:
-        for tok2 in tokens2:
-            features[tok1+"#"+tok2]=1
+    for f in ['{}#{}'.format(t1, t2) for t1 in tokens1 for t2 in tokens2]:
+        features[f] = 1
     return features
+
 
 def paraphrases_to_dataset(filename, f_token=True, f_w_ngram=True, f_c_ngram=True, f_wordpair=True):
     """
@@ -60,7 +60,7 @@ def paraphrases_to_dataset(filename, f_token=True, f_w_ngram=True, f_c_ngram=Tru
     instance_list = []
     with open(filename, 'r') as myfile:
         for line in myfile:
-            parts=line.strip().split("\t")
+            parts = line.strip().split("\t")
             text1 = parts[0]
             text2 = parts[1]
             label = parts[2] == "true"
@@ -79,10 +79,11 @@ def paraphrases_to_dataset(filename, f_token=True, f_w_ngram=True, f_c_ngram=Tru
                 character_ngrams2 = set(character_ngrams(text2, 3))
                 features.update(character_ngram_features(character_ngrams1, character_ngrams2))
             if f_wordpair:
-                features.update(wordpair_features(tokens1,tokens2))
+                features.update(wordpair_features(tokens1, tokens2))
             inst = DataInstance(features, label)
             instance_list.append(inst)
     return Dataset(instance_list)
+
 
 def feature_comparison(trainpath, devpath, print_output=False):
     """
@@ -97,12 +98,12 @@ def feature_comparison(trainpath, devpath, print_output=False):
     # Create tuple list with signatures for each feature activated one at a time + stacking feature combinations
     for (signature, explanation) in \
             [([False, False, False, True], "Only wordpair features"),
-             ([False, False, True,  False], "Only character ngram features"),
-             ([False, True,  False, False], "Only word ngram features"),
-             ([True,  False, False, False], "Only token features"),
-             ([False, False, True,  True], "wordpair and character ngram features"),
-             ([False, True,  True,  True], "wordpair, character ngram and word ngram features"),
-             ([True,  True,  True,  True], "wordpair, character ngram, word ngram and token features")]:
+             ([False, False, True, False], "Only character ngram features"),
+             ([False, True, False, False], "Only word ngram features"),
+             ([True, False, False, False], "Only token features"),
+             ([False, False, True, True], "wordpair and character ngram features"),
+             ([False, True, True, True], "wordpair, character ngram and word ngram features"),
+             ([True, True, True, True], "wordpair, character ngram, word ngram and token features")]:
 
         if print_output: print(explanation)
         train_set = paraphrases_to_dataset(trainpath, *signature)
@@ -114,6 +115,7 @@ def feature_comparison(trainpath, devpath, print_output=False):
         if print_output: print("---------------")
         devaccs.append(dev_accuracy)
     return devaccs
+
 
 def main(argv):
     """ Trains and evaluates the classifier on data in Semeval-2015 data."""
@@ -128,9 +130,9 @@ def main(argv):
     dev_set = paraphrases_to_dataset(opts.development)
     test_set = paraphrases_to_dataset(opts.evaluation)
 
-    mfs_dev = dev_set.most_frequent_sense_accuracy() 
+    mfs_dev = dev_set.most_frequent_sense_accuracy()
     print("Most frequent sense (dev): %s " % mfs_dev)
-    if opts.featurecomparison: 
+    if opts.featurecomparison:
         print("\nFEATURE COMPARISON MODE")
         feature_comparison(opts.training, opts.development, print_output=True)
     else:
@@ -140,6 +142,7 @@ def main(argv):
         mfs_test = test_set.most_frequent_sense_accuracy()
         print("Most frequent sense (test):", mfs_test)
         print("Test Accuracy: %.4f" % (test_accuracy))
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
