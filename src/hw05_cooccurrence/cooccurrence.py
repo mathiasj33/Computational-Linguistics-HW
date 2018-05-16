@@ -3,8 +3,10 @@ from collections import defaultdict
 from scipy.sparse import lil_matrix
 import math
 
+
 def normalized_tokens(text):
     return [token.lower() for token in word_tokenize(text)]
+
 
 def cooccurrences(text, n):
     """
@@ -29,8 +31,9 @@ def cooccurrences(text, n):
         context_start = max(0, middle_position - n)
         context_end = min(len(tokens), middle_position + n + 1)
         for context_position in range(context_start, context_end):
-            pass # TODO: Exercise 1: fill the dictionary with co-occurrence counts.
+            pass  # TODO: Exercise 1: fill the dictionary with co-occurrence counts.
     return pair_to_count
+
 
 def cooc_dict_to_matrix(cooc_dict):
     """
@@ -48,14 +51,15 @@ def cooc_dict_to_matrix(cooc_dict):
     6
     """
     vocab = set()
-    for w1,w2 in cooc_dict:
+    for w1, w2 in cooc_dict:
         vocab.add(w1)
         vocab.add(w2)
     # TODO: Make sure you understand Pythons enumerate, and dictionary comprehensions.
-    word_to_id = {w:i for i,w in enumerate(sorted(vocab))}
+    word_to_id = {w: i for i, w in enumerate(sorted(vocab))}
     m = lil_matrix((len(vocab), len(vocab)))
-    pass # TODO: Exercise 2: Populate matrix with values from dictionary.
+    pass  # TODO: Exercise 2: Populate matrix with values from dictionary.
     return m, word_to_id
+
 
 def ppmi_weight(cooc_matrix):
     """
@@ -77,11 +81,11 @@ def ppmi_weight(cooc_matrix):
            [ 0.06899287,  0.        ]])
     """
     sum_total = cooc_matrix.sum()
-    sum_in_col = cooc_matrix.sum(0) # sparse 1 x d matrix, use sum_in_col[0,i] to get i'th value.
-    sum_in_row = cooc_matrix.sum(1) # sparse d x 1 matrix, use sum_in_row[i,0] to get i'th value.
+    sum_in_col = cooc_matrix.sum(0)  # sparse 1 x d matrix, use sum_in_col[0,i] to get i'th value.
+    sum_in_row = cooc_matrix.sum(1)  # sparse d x 1 matrix, use sum_in_row[i,0] to get i'th value.
     ppmi_matrix = lil_matrix(cooc_matrix.shape)
     rows, cols = cooc_matrix.nonzero()
-    for row,col in zip(rows,cols):
+    for row, col in zip(rows, cols):
         pass
         # TODO: Exercise 3: calculate PPMI, and store result in ppmi_matrix
     return ppmi_matrix
