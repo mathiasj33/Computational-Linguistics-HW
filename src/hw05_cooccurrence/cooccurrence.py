@@ -31,7 +31,8 @@ def cooccurrences(text, n):
         context_start = max(0, middle_position - n)
         context_end = min(len(tokens), middle_position + n + 1)
         for context_position in range(context_start, context_end):
-            pass  # TODO: Exercise 1: fill the dictionary with co-occurrence counts.
+            if context_position == middle_position: continue
+            pair_to_count[(middle_word, tokens[context_position])] += 1
     return pair_to_count
 
 
@@ -54,10 +55,10 @@ def cooc_dict_to_matrix(cooc_dict):
     for w1, w2 in cooc_dict:
         vocab.add(w1)
         vocab.add(w2)
-    # TODO: Make sure you understand Pythons enumerate, and dictionary comprehensions.
     word_to_id = {w: i for i, w in enumerate(sorted(vocab))}
     m = lil_matrix((len(vocab), len(vocab)))
-    pass  # TODO: Exercise 2: Populate matrix with values from dictionary.
+    for (w1, w2) in cooc_dict:
+        m[word_to_id[w1], word_to_id[w2]] = cooc_dict[(w1, w2)]
     return m, word_to_id
 
 
@@ -86,6 +87,6 @@ def ppmi_weight(cooc_matrix):
     ppmi_matrix = lil_matrix(cooc_matrix.shape)
     rows, cols = cooc_matrix.nonzero()
     for row, col in zip(rows, cols):
-        pass
-        # TODO: Exercise 3: calculate PPMI, and store result in ppmi_matrix
+        ppmi_matrix[row, col] = max(0.0, math.log((cooc_matrix[row, col] / sum_total) / (
+                    sum_in_row[row, 0] * sum_in_col[0, col] / (sum_total * sum_total))))
     return ppmi_matrix
