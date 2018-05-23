@@ -15,8 +15,8 @@ def vocabulary_from_wordlist(word_list, vocab_size):
     >>> v == {'a', 'rose', 'is'}
     True
     """
-    # TODO: Exercise 1
-    pass
+    c = Counter(word_list)
+    return set([w for (w, c) in c.most_common(vocab_size)])
 
 
 def cooccurrences(tokens, n, vocab):
@@ -33,10 +33,30 @@ def cooccurrences(tokens, n, vocab):
     True
     """
 
-    # TODO insert code here
-    # either from hw05_cooccurrence/cooccurrence.py or
-    # from https://cla2018.github.io/cooc_func.nopy (after the deadline; May 18, 16:00)
-    pass
+    cooc_dict = defaultdict(int)
+    size = n + 1
+    for i, f_middle_word in enumerate(tokens):
+
+        # forward (right windows)
+        if f_middle_word in vocab:
+            f_context = tokens[0 + i + 1:i + size]
+            for context_word in f_context:
+                if context_word not in vocab:
+                    continue
+                cooc_dict[(f_middle_word, context_word)] += 1
+
+        # backward (left windows)
+        b_middle_word = tokens[-i - 1]
+
+        if b_middle_word not in vocab:
+            continue
+        b_context = tokens[-i - size:-i - 1]
+        for context_word in b_context:
+            if context_word not in vocab:
+                continue
+            cooc_dict[(b_middle_word, context_word)] += 1
+
+    return cooc_dict
 
 
 def cooc_dict_to_matrix(cooc_dict, vocab):
@@ -57,9 +77,8 @@ def cooc_dict_to_matrix(cooc_dict, vocab):
     """
     word_to_id = {w: i for i, w in enumerate(sorted(vocab))}
     m = lil_matrix((len(vocab), len(vocab)))
-    # TODO insert code here
-    # either from hw05_cooccurrence/cooccurrence.py or
-    # from https://cla2018.github.io/cooc_func.nopy (after the deadline; May 18, 16:00)
+    for (w1, w2), count in cooc_dict.items():
+        m[word_to_id[w1], word_to_id[w2]] = count
     return m, word_to_id
 
 
@@ -88,8 +107,13 @@ def ppmi_weight(cooc_matrix):
     ppmi_matrix = lil_matrix(cooc_matrix.shape)
     rows, cols = cooc_matrix.nonzero()
     for row, col in zip(rows, cols):
-        # TODO insert code here
-        # either from hw05_cooccurrence/cooccurrence.py or
-        # from https://cla2018.github.io/cooc_func.nopy (after the deadline; May 18, 16:00)
-        pass
+        prc = cooc_matrix[row, col]
+        pr = sum_in_row[row]
+        pc = sum_in_col[col]
+
+        ppmi = math.log(prc) + math.log(sum_total) - math.log(pr) - math.log(pc)
+
+        if ppmi > 0:
+            ppmi_matrix[row, col] = ppmi
+
     return ppmi_matrix
