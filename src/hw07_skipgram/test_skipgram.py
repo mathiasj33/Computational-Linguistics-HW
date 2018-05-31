@@ -5,6 +5,7 @@ from scipy import stats
 import types
 import numpy as np
 
+
 class test_word_similarity(TestCase):
     # def setUp(self):
 
@@ -31,7 +32,6 @@ class test_word_similarity(TestCase):
                                                                           vocab_to_id=vocab_dict)
         self.assertIsNotNone(pos_neg_cooccurrences)
         with_negatives = list(pos_neg_cooccurrences)
-
 
         # Count number of positive target words for id "2"
 

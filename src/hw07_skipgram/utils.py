@@ -2,13 +2,16 @@ import math, random
 import numpy as np
 from collections import Counter
 
+
 def vocabulary_to_id_for_wordlist(word_list, vocab_size):
     """ Returns a mapping from word to id for vocab_size most frequent words in a list. """
-    return None# TODO: Replace & Exercise 1.
+    return None  # TODO: Replace & Exercise 1.
+
 
 def sigmoid(x):
     """ Calculates the logistic sigmoid function."""
-    return -1 # TODO: Replace & Exercise 2.
+    return -1  # TODO: Replace & Exercise 2.
+
 
 def positive_and_negative_cooccurrences(tokens, max_distance, neg_samples_factor, vocab_to_id):
     """
@@ -30,7 +33,8 @@ def positive_and_negative_cooccurrences(tokens, max_distance, neg_samples_factor
     :param vocab_to_id: dictionary (string to int) mapping each word to its id (=row in embedding matrizes).
     :return: generator over tuples of the form (target_word_id:int, context_word_id:int, label:boolean)
     """
-    return None # TODO: Exercise 3.
+    return None  # TODO: Exercise 3.
+
 
 class DenseSimilarityMatrix:
     def __init__(self, word_matrix, word_to_id):
@@ -49,7 +53,7 @@ class DenseSimilarityMatrix:
         if not (wordA in self.word_to_id and wordB in self.word_to_id):
             return .0
         rowA, rowB = (self.word_to_id[wordA], self.word_to_id[wordB])
-        vecA, vecB = (self.word_matrix[rowA,:], self.word_matrix[rowB,:])
+        vecA, vecB = (self.word_matrix[rowA, :], self.word_matrix[rowB, :])
         dotAB, dotAA, dotBB = (vecA.dot(vecB.T), vecA.dot(vecA.T), vecB.dot(vecB.T))
         return dotAB / math.sqrt(dotAA * dotBB)
 
@@ -57,10 +61,10 @@ class DenseSimilarityMatrix:
         if word not in self.word_to_id:
             return []
         row = self.word_to_id[word]
-        vec = self.word_matrix[row,:]
+        vec = self.word_matrix[row, :]
         m = self.word_matrix
-        dot_m_v = m.dot(vec.T) # n-dim vector
-        dot_m_m = np.sum(m * m, axis=1) # n-dim vector
-        dot_v_v = vec.dot(vec.T) # float
+        dot_m_v = m.dot(vec.T)  # n-dim vector
+        dot_m_m = np.sum(m * m, axis=1)  # n-dim vector
+        dot_v_v = vec.dot(vec.T)  # float
         sims = dot_m_v / (math.sqrt(dot_v_v) * np.sqrt(dot_m_m))
         return [self.id_to_word[idx] for idx in (-sims).argsort()[:n]]
