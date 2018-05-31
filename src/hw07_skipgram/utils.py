@@ -5,12 +5,13 @@ from collections import Counter
 
 def vocabulary_to_id_for_wordlist(word_list, vocab_size):
     """ Returns a mapping from word to id for vocab_size most frequent words in a list. """
-    return None  # TODO: Replace & Exercise 1.
+    counter = Counter(word_list)
+    most_common = counter.most_common(vocab_size)
+    return {most_common[i][0]: i for i in range(vocab_size)}
 
 
 def sigmoid(x):
-    """ Calculates the logistic sigmoid function."""
-    return -1  # TODO: Replace & Exercise 2.
+    return 1/(1+math.exp(-x))
 
 
 def positive_and_negative_cooccurrences(tokens, max_distance, neg_samples_factor, vocab_to_id):
@@ -33,7 +34,18 @@ def positive_and_negative_cooccurrences(tokens, max_distance, neg_samples_factor
     :param vocab_to_id: dictionary (string to int) mapping each word to its id (=row in embedding matrizes).
     :return: generator over tuples of the form (target_word_id:int, context_word_id:int, label:boolean)
     """
-    return None  # TODO: Exercise 3.
+    tokens = [t for t in tokens if t in vocab_to_id]
+    for position in range(len(tokens)):
+        target_word = tokens[position]
+        left = max(position-max_distance, 0)
+        right = min(position+max_distance+1, len(tokens))
+        for c_pos in range(left, right):
+            if c_pos == position: continue
+            context_word = tokens[c_pos]
+            yield vocab_to_id[target_word], vocab_to_id[context_word], True
+            for _ in range(neg_samples_factor):
+                random_word = tokens[random.randint(0, len(tokens)-1)]
+                yield vocab_to_id[target_word], vocab_to_id[random_word], False
 
 
 class DenseSimilarityMatrix:
