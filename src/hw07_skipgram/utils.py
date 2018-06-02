@@ -44,8 +44,8 @@ def positive_and_negative_cooccurrences(tokens, max_distance, neg_samples_factor
             context_word = tokens[c_pos]
             yield vocab_to_id[target_word], vocab_to_id[context_word], True
             for _ in range(neg_samples_factor):
-                random_word = tokens[random.randint(0, len(tokens)-1)]
-                yield vocab_to_id[target_word], vocab_to_id[random_word], False
+                r = random.randint(0, len(vocab_to_id)-1)
+                yield vocab_to_id[target_word], list(vocab_to_id.values())[r], False
 
 
 class DenseSimilarityMatrix:
