@@ -23,7 +23,6 @@ def read_word2vec_file(filename):
         word_to_id -- Dictionary, mapping each word to the corresponding row in the matrix.
     """
     word_to_id = dict()
-    m_word_vectors = None
 
     with open(filename) as infile:
         first_line = infile.readline().strip().split(" ")
@@ -83,7 +82,7 @@ def read_entity_types_file(filename, m_word_vectors, word_to_id, type_to_id = No
             parts = line.strip().split("\t")
             token_ids = [word_to_id[t] for t in parts[0].split(" ") if t in word_to_id]
             num_tokens = len(token_ids)
-            avg_feature_vec = None  # TODO: Exercise 2
+            avg_feature_vec = np.array([0] * num_dims) if num_tokens == 0 else sum([m_word_vectors[i] for i in token_ids]) / num_tokens
             feature_rows.append(avg_feature_vec)
             for type in parts[1].split(" "):
                 if grow_type_dict and type not in type_to_id:
