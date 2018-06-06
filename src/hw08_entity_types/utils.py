@@ -24,7 +24,19 @@ def read_word2vec_file(filename):
     """
     word_to_id = dict()
     m_word_vectors = None
-    # TODO Exercise 1
+
+    with open(filename) as infile:
+        first_line = infile.readline().strip().split(" ")
+        num_rows = int(first_line[0])
+        num_cols = int(first_line[1])
+        m_word_vectors = np.zeros((num_rows, num_cols))
+        id = 0
+        for line in infile:
+            arr = line.split(' ')
+            word_to_id[arr[0]] = id
+            vector = np.array([float(x) for x in arr[1:]])
+            m_word_vectors[id] = vector
+            id += 1
 
     return m_word_vectors, word_to_id
 
