@@ -1,0 +1,103 @@
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.008s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+E
+======================================================================
+ERROR: test_03_negative_samples_3 (hw07_skipgram.test_skipgram.Test_word_similarity)
+Tests whether negative tuples are created correctly: Are they chosen randomly from all words?
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File .../tmp_repositories/abgabe/hw07_skipgram/TeamTUM/src/hw07_skipgram/test_skipgram.py", line 87, in test_03_negative_samples_3
+    p_value = stats.chisquare(list(neg_label_distribution.values()), expected_distribution)[1]
+  File "/home/g/guimeracuevas/.local/lib/python3.5/site-packages/scipy/stats/stats.py", line 4677, in chisquare
+    lambda_="pearson")
+  File "/home/g/guimeracuevas/.local/lib/python3.5/site-packages/scipy/stats/stats.py", line 4544, in power_divergence
+    terms = (f_obs - f_exp)**2 / f_exp
+ValueError: operands could not be broadcast together with shapes (4,) (5,) 
+
+----------------------------------------------------------------------
+Ran 1 test in 0.008s
+
+FAILED (errors=1)
+F
+======================================================================
+FAIL: test_03_negative_samples_4 (hw07_skipgram.test_skipgram.Test_word_similarity)
+Tests whether negative tuples are created correctly: Are they created from all positive tuples?
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File .../tmp_repositories/abgabe/hw07_skipgram/TeamTUM/src/hw07_skipgram/test_skipgram.py", line 101, in test_03_negative_samples_4
+    self.assertEqual(neg_label_contexts, {0, 1, 2, 3, 4})
+AssertionError: Items in the second set but not the first:
+1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+OK
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
