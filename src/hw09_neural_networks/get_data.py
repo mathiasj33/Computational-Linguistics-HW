@@ -18,14 +18,16 @@ def create_dictionary(texts, vocab_size):
     for tokens in texts:
         counter.update(tokens)
     vocab = [w for w, c in counter.most_common(vocab_size - 1)]
-    pass  # TODO: Exercise 1.
+    d = {vocab[i]:i+1 for i in range(vocab_size - 1)}
+    d[UNKNOWN_TOKEN] = 0
+    return d
 
 
 def to_ids(words, dictionary):
     """
     Takes a list of words and converts them to ids using the word2id dictionary.
     """
-    pass  # TODO: Exercise 2.
+    return [dictionary.get(w, 0) for w in words]
 
 
 def nltk_data(n_texts_train=1500, n_texts_dev=500, vocab_size=10000):
