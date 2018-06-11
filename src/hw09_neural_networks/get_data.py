@@ -7,6 +7,7 @@ random.seed(111)
 
 UNKNOWN_TOKEN = "<unk>"
 
+
 def create_dictionary(texts, vocab_size):
     """
     Creates a dictionary that maps words to ids. More frequent words have lower ids.
@@ -16,14 +17,15 @@ def create_dictionary(texts, vocab_size):
     counter = collections.Counter()
     for tokens in texts:
         counter.update(tokens)
-    vocab = [w for w,c in counter.most_common(vocab_size-1)]
-    pass # TODO: Exercise 1.
+    vocab = [w for w, c in counter.most_common(vocab_size - 1)]
+    pass  # TODO: Exercise 1.
+
 
 def to_ids(words, dictionary):
     """
     Takes a list of words and converts them to ids using the word2id dictionary.
     """
-    pass # TODO: Exercise 2.
+    pass  # TODO: Exercise 2.
 
 
 def nltk_data(n_texts_train=1500, n_texts_dev=500, vocab_size=10000):
@@ -48,28 +50,29 @@ def nltk_data(n_texts_train=1500, n_texts_dev=500, vocab_size=10000):
     seen word to an id.
     """
     all_ids = movie_reviews.fileids()
-    if (n_texts_train+n_texts_dev>len(all_ids)):
-        print ("Error: There are only",len(all_ids), "texts in the movie_reviews corpus. Training with all of those sentences.")
-        n_texts_train=1500
-        n_texts_dev=500
+    if (n_texts_train + n_texts_dev > len(all_ids)):
+        print("Error: There are only", len(all_ids),
+              "texts in the movie_reviews corpus. Training with all of those sentences.")
+        n_texts_train = 1500
+        n_texts_dev = 500
     posids = movie_reviews.fileids('pos')
     random.shuffle(all_ids)
 
-    texts_train=[]
-    labels_train=[]
-    texts_dev=[]
-    labels_dev=[]
+    texts_train = []
+    labels_train = []
+    texts_dev = []
+    labels_dev = []
 
     for i in range(n_texts_train):
         text = movie_reviews.raw(fileids=[all_ids[i]])
         tokens = [word.lower() for word in word_tokenize(text)]
         texts_train.append(tokens)
-        if all_ids[i] in posids:       
+        if all_ids[i] in posids:
             labels_train.append(1)
         else:
             labels_train.append(0)
 
-    for i in range(n_texts_train, n_texts_train+n_texts_dev):
+    for i in range(n_texts_train, n_texts_train + n_texts_dev):
         text = movie_reviews.raw(fileids=[all_ids[i]])
         tokens = [word.lower() for word in word_tokenize(text)]
         texts_dev.append(tokens)
@@ -78,8 +81,7 @@ def nltk_data(n_texts_train=1500, n_texts_dev=500, vocab_size=10000):
         else:
             labels_dev.append(0)
 
-    word2id=create_dictionary(texts_train, vocab_size)
-    texts_train = [to_ids(s,word2id) for s in texts_train]
-    texts_dev = [to_ids(s,word2id) for s in texts_dev]
+    word2id = create_dictionary(texts_train, vocab_size)
+    texts_train = [to_ids(s, word2id) for s in texts_train]
+    texts_dev = [to_ids(s, word2id) for s in texts_dev]
     return (texts_train, labels_train, texts_dev, labels_dev, word2id)
-
