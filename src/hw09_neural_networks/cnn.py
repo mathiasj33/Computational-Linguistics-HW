@@ -13,13 +13,15 @@ EPOCHS = 10
 
 def build_and_evaluate_model(x_train, y_train, x_dev, y_dev):
     '''Builds, trains and evaluates a keras LSTM model.'''
-    return 0, 0, None  # TODO: REMOVE for exercise 4.
-    x_train = None  # TODO: Exercise 4.1
-    x_dev = None  # TODO: Exercise 4.1
-    # ODOT
+    x_train = sequence.pad_sequences(x_train, MAX_LEN)
+    x_dev = sequence.pad_sequences(x_dev, MAX_LEN)
     model = Sequential()
-    # TODO: Ex. 4.2 - 4.4
-    # ODOT
+    model.add(Embedding(input_dim=VOCAB_SIZE, output_dim=50))
+    model.add(Convolution1D(filters=25, kernel_size=3, activation='relu'))
+    model.add(GlobalMaxPooling1D())
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    model.fit(x_train, y_train, batch_size=BATCH_SIZE, epochs=EPOCHS, validation_data=(x_dev, y_dev))
     score, acc = model.evaluate(x_dev, y_dev)
     return score, acc, model
 
