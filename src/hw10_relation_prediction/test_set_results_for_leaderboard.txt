@@ -1,0 +1,4 @@
+# TODO: Overwrite this file with predictions on the test set, if you want to take part in the voluntary competition.
+# (no bonus points)
+# Attention: It must be possible to evaluate this file, using evaluate.py, i.e. it must have the same number of lines as
+# test_relations.tsv, and only contain relation names (incl no_relation).
