@@ -3,6 +3,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import LabelEncoder
 from sklearn import linear_model
 
+
 def main(argv):
     """ This script trains a relation prediction model, and outputs predictions for development data.
     It takes three filenames as arguments:
@@ -28,7 +29,7 @@ def main(argv):
     # Bring data into matrix format.
     train_tokens, train_labels = augmented_tokens_and_labels(train_file)
     dev_tokens, dev_labels = augmented_tokens_and_labels(dev_file)
-    vec = CountVectorizer(tokenizer=lambda x: x.split(' '), ngram_range=(2,3), min_df=2)
+    vec = CountVectorizer(tokenizer=lambda x: x.split(' '), ngram_range=(2, 3), min_df=2)
     vec.fit(train_tokens)
     le = LabelEncoder()
     le.fit(train_labels)
@@ -45,6 +46,7 @@ def main(argv):
     predicted_relation_names = le.inverse_transform(y_predicted_dev)
     with open(prediction_for_dev_file, "w") as text_file:
         print("\n".join(predicted_relation_names), file=text_file)
+
 
 def augmented_tokens_and_labels(filename):
     """ This reads a file with relation/sentence instances (in tab-separated format) and returns two lists:
@@ -63,6 +65,7 @@ def augmented_tokens_and_labels(filename):
             textlist.append(" ".join(token + subject_direction for token in tokens.split(" ")))
             labellist.append(relation)
     return textlist, labellist
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])

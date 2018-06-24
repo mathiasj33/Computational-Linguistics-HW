@@ -18,5 +18,6 @@ def main(argv):
     print("Accuracy: \n{0:.4f}".format(accuracy))
     return accuracy
 
+
 if __name__ == "__main__":
     main(sys.argv[1:])

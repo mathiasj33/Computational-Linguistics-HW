@@ -1,0 +1,6 @@
+model = Sequential()
+    model.add(Embedding(input_dim=vocab_size, output_dim=300))
+    model.add(Convolution1D(filters=100, kernel_size=3, activation='relu'))
+    model.add(GlobalMaxPooling1D())
+    model.add(Dropout(0.5))
+    model.add(Dense(num_classes, activation='softmax'))

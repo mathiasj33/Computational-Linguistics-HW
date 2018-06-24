@@ -1,6 +1,8 @@
 import numpy as np
+
 np.random.seed(1337)
 import tensorflow as tf
+
 tf.set_random_seed(13370)
 tf_session = tf.Session(config=tf.ConfigProto(inter_op_parallelism_threads=1))
 import sys
@@ -8,6 +10,7 @@ from collections import Counter
 from keras.models import Sequential
 from keras.layers import Embedding, GlobalMaxPooling1D, Dense
 from keras import backend as K
+
 K.set_session(tf_session)
 from sklearn.preprocessing import LabelEncoder
 from keras.utils import to_categorical
@@ -46,7 +49,7 @@ def main(argv):
     word_to_id = get_word_to_id_map(train_tokens, vocab_size)
     le = LabelEncoder()
     le.fit(train_labels)
-    maxlen=50
+    maxlen = 50
     num_classes = 40
 
     train_matrix = get_text_matrix(train_tokens, word_to_id, maxlen)
@@ -60,13 +63,14 @@ def main(argv):
     model.add(GlobalMaxPooling1D())
     model.add(Dense(num_classes, activation='softmax'))
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-    model.fit(train_matrix, train_labels, validation_data=(dev_matrix, dev_labels),epochs=10)
+    model.fit(train_matrix, train_labels, validation_data=(dev_matrix, dev_labels), epochs=10)
     y_predicted_dev = model.predict_classes(dev_matrix)
 
     # Transform predictions to strings and write out.
     predicted_relation_names = le.inverse_transform(y_predicted_dev)
     with open(prediction_for_dev_file, "w") as text_file:
         print("\n".join(predicted_relation_names), file=text_file)
+
 
 def tokens_and_labels(filename):
     """ This reads a file with relation/sentence instances (in tab-sepated format) and returns two lists:
@@ -82,22 +86,24 @@ def tokens_and_labels(filename):
             labellist.append(relation)
     return textlist, labellist
 
+
 def get_word_to_id_map(textlist, vocab_size):
     """ Creates mapping word -> id for the most frequent words in the vocabulary. Ids 0 and 1 are reserved for the
     padding symbol <PAD> and the unknown token <UNK>. vocab_size determines the overall vocabulary size (including <UNK>
     and <PAD>)"""
-    assert(vocab_size >= 2)
+    assert (vocab_size >= 2)
     c = Counter(tok for text in textlist for tok in text.split(" "))
     try:
         # Use fixed word frequencies
         with open(hw10_path + "/ids_words" + str(vocab_size) + ".p", "rb") as f:
             ids_words = pickle.load(f)
     except FileNotFoundError:
-        ids_words = enumerate(['<PAD>','<UNK>'] + sorted([word for word, count in c.most_common(vocab_size - 2)]))
+        ids_words = enumerate(['<PAD>', '<UNK>'] + sorted([word for word, count in c.most_common(vocab_size - 2)]))
         # Write file instead of extensive deterministic function
         with open(hw10_path + "/ids_words" + str(vocab_size) + ".p", "wb") as f:
             pickle.dump(ids_words, f)
     return {w: idx for idx, w in ids_words}
+
 
 def get_text_matrix(textlist, word_to_id, maxlen):
     """ This takes textlist (list with white-space separated tokens) and returns a numpy matrix of size
@@ -114,10 +120,11 @@ def get_text_matrix(textlist, word_to_id, maxlen):
         for word in text.split(" "):
             if col_nr == maxlen:
                 break
-            m[row_nr, col_nr] = word_to_id.get(word, 1) # id for <UNK>
+            m[row_nr, col_nr] = word_to_id.get(word, 1)  # id for <UNK>
             col_nr += 1
         row_nr += 1
     return m
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])

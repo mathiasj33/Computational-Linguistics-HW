@@ -1,0 +1,14 @@
+submodels = []
+    for kw in (3, 4, 5):  # kernel sizes
+        submodel = Sequential()
+        submodel.add(Embedding(input_dim=vocab_size, output_dim=300))
+        submodel.add(Convolution1D(filters=50, activation='relu', kernel_size=kw))
+        submodel.add(GlobalMaxPooling1D())
+        submodel.add(Dropout(0.5))
+        submodels.append(submodel)
+    big_model = Sequential()
+    big_model.add(Merge(submodels, mode="concat"))
+    big_model.add(Dense(num_classes, activation='softmax'))
+    big_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    big_model.fit([train_matrix, train_matrix, train_matrix], train_labels, validation_data=([dev_matrix, dev_matrix, dev_matrix], dev_labels), epochs=10)
+    y_predicted_dev = big_model.predict_classes([dev_matrix, dev_matrix, dev_matrix])
