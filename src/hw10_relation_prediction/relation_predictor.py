@@ -71,7 +71,7 @@ def main(argv):
     model.add(Dense(num_classes, activation='softmax'))
     model.add(Dropout(0.5))
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-    model.fit([train_matrix, train_matrix, train_matrix], train_labels, validation_data=([dev_matrix, dev_matrix, dev_matrix], dev_labels), epochs=10)
+    model.fit([train_matrix, train_matrix, train_matrix], train_labels, validation_data=([dev_matrix, dev_matrix, dev_matrix], dev_labels), epochs=9)
     y_predicted_dev = model.predict_classes([dev_matrix, dev_matrix, dev_matrix])
 
     # Transform predictions to strings and write out.
